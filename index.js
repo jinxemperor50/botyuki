@@ -244,7 +244,20 @@ function playSilent(connection){
 client.once("ready",()=>{
   console.log(`Bot aktif sebagai ${client.user.tag}`);
 });
+// ===============================
+// DISCONNECT HANDLER
+// ===============================
+client.on("disconnect", () => {
+  console.log("🔌 Bot disconnect dari Discord!");
+});
 
+client.on("reconnecting", () => {
+  console.log("🔄 Bot mencoba reconnect...");
+});
+
+client.on("resume", () => {
+  console.log("✅ Connection resumed!");
+});
 
 // ===============================
 // MESSAGE COMMANDS
@@ -887,4 +900,23 @@ sendSilent(channel,{embeds:[embed]});
 });
 
 // ===============================
-client.login(process.env.TOKEN);
+async function startBot(){
+
+try{
+
+await client.login(process.env.TOKEN);
+
+console.log("Bot login berhasil ✅");
+
+}catch(err){
+
+console.log("Login gagal, mencoba lagi...");
+console.error(err);
+
+setTimeout(startBot, 10000); // retry 10 detik
+
+}
+
+}
+
+startBot();
